@@ -97,5 +97,4 @@ if ! [[ -d ~/.config/emacs ]]; then
     ~/.config/emacs/bin/doom install
 fi
 
-
 echo "Don't forget to set CapsLock to Ctrl"

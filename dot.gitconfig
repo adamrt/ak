@@ -1,0 +1,16 @@
+[user]
+        name = Adam Patterson
+        email = adam@adamrt.com
+        signingkey = 6EA6FC1D
+[diff]
+        algorithm = histogram
+[url "ssh://git@github.com:/"]
+        insteadOf = https://github.com/
+[commit]
+        gpgSign = true
+[tag]
+        gpgSign = true
+[github]
+        user = adamrt
+[init]
+	defaultBranch = master
