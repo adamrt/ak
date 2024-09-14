@@ -1,10 +1,10 @@
 #!/bin/bash
- 
-set -e
 
-[ -d ~/.gnupg ]          || (echo "Missing .gnupg"     && exit 1)
-[ -f ~/.ssh/id_ed25519 ] || (echo "Missing .ssh"       && exit 1)
-[ -f ~/.gitconfig ]      || (echo "Missing .gitconfig" && exit 1)
+set -euo pipefail
+
+[[ -d ~/.gnupg ]]          || (echo "Missing .gnupg"     && exit 1)
+[[ -f ~/.ssh/id_ed25519 ]] || (echo "Missing .ssh"       && exit 1)
+[[ -f ~/.gitconfig ]]      || (echo "Missing .gitconfig" && exit 1)
 
 # Setup directories
 mkdir -p ~/tmp
@@ -46,7 +46,7 @@ killall Finder
 #
 
 # Install homebrew
-[ -d /opt/homebrew ] || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+[[ -d /opt/homebrew ]] || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Add homebrew to path
 if ! grep -q 'eval "$(/opt/homebrew/bin/brew shellenv)"' /Users/adam/.zprofile; then
