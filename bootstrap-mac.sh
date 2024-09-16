@@ -75,6 +75,7 @@ brew install --quiet go
 brew install --quiet golangci-lint
 brew install --quiet gopls
 brew install --quiet node
+brew install --quiet prettier
 brew install --quiet python3
 
 brew install --quiet glfw
