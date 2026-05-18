@@ -1,5 +1,7 @@
 #!/bin/bash
 
+USER=adam
+
 set -euo pipefail
 
 [[ -d ~/.gnupg ]]          || (echo "Missing .gnupg"     && exit 1)
@@ -49,9 +51,9 @@ killall Finder
 [[ -d /opt/homebrew ]] || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Add homebrew to path
-if ! grep -q 'eval "$(/opt/homebrew/bin/brew shellenv)"' /Users/adam/.zprofile; then
-    (echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/adam/.zprofile
-    eval "$(/opt/homebrew/bin/brew shellenv)"
+if ! grep -q 'eval "$(/opt/homebrew/bin/brew shellenv)"' /Users/$USER/.zprofile; then
+    (echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv zsh)"') >> /Users/$USER/.zprofile
+    eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 fi
 
 # Install basics
