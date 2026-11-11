@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
 Name=Emacs 31
-Exec=$HOME/opt/bin/emacs %F
-TryExec=$HOME/opt/bin/emacs
+Exec=/home/adam/opt/bin/emacs %F
+TryExec=/home/adam/opt/bin/emacs
 Icon=emacs
 Terminal=false
 Categories=Development;TextEditor;
