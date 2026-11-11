@@ -1,0 +1,77 @@
+# i3 configuration
+
+set $mod Mod4
+font pango:Berkeley Mono 16
+
+# Window behavior
+floating_modifier $mod
+workspace_layout tabbed
+default_border pixel 1
+
+# Window spacing
+gaps inner 12
+gaps outer 8
+smart_gaps inverse_outer
+
+# Applications
+bindsym $mod+Return exec konsole
+bindsym $mod+b exec firefox
+bindsym $mod+p exec dmenu_run
+
+# Window switching
+bindsym Mod1+Tab focus next
+bindsym Mod1+Shift+Tab focus prev
+
+# Vim-style navigation
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# Layout
+bindsym $mod+t layout tabbed
+bindsym $mod+s layout toggle split
+bindsym $mod+f fullscreen toggle
+bindsym $mod+Shift+space floating toggle
+
+# Window management
+bindsym $mod+Shift+q kill
+
+# Workspaces
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+
+# Screen locking (10 minutes idle, and before suspend)
+exec --no-startup-id xset s 600 0
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+bindsym $mod+Shift+l exec i3lock
+
+# Caps Lock acts as Control
+exec_always --no-startup-id setxkbmap -option ctrl:nocaps
+
+# Background
+exec --no-startup-id xsetroot -solid '#282c34'
+
+# Session
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+e exit
+
+# Status bar
+bar {
+    position bottom
+    font pango:Berkeley Mono 16
+    status_command i3status
+
+    colors {
+        background #282c34
+        statusline #d8dcd9
+        separator  #454c4f
+
+        focused_workspace  #8fb8d1 #303537 #d8dcd9
+        inactive_workspace #282c34 #282c34 #959c98
+        urgent_workspace   #b58f8c #483a3f #d8dcd9
+    }
+}
