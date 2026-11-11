@@ -109,6 +109,11 @@
       project-switch-commands #'magit-project-status)
 (etags-regen-mode 1)
 
+;; semantic-symref-filepattern-alist doesn't include c-ts-mode
+(with-eval-after-load 'semantic/symref/grep
+  (add-to-list 'semantic-symref-filepattern-alist
+               '(c-ts-mode "*.[ch]")))
+
 ;;;; Compile
 (setq compilation-scroll-output 'first-error
       compilation-ask-about-save nil)

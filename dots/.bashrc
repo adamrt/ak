@@ -14,3 +14,8 @@ PS1='\u@\h:\w\$ '
 
 # Aliases
 [ -f "$HOME/.bash_aliases" ] && . "$HOME/.bash_aliases"
+
+# Eat shell integration
+if [ -n "${EAT_SHELL_INTEGRATION_DIR:-}" ]; then
+    . "$EAT_SHELL_INTEGRATION_DIR/bash"
+fi
