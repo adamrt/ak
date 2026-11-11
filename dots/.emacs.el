@@ -1,37 +1,28 @@
 ;;; init.el --- built-ins plus Evil, Magit, Consult and Eat. -*- lexical-binding: t; -*-
 
-;; Emacs.app's bundled GCC derives a nonexistent macOS version (18) from
-;; Darwin 27, breaking native compilation.  Give it the real one.
-;; Remove once a fixed Emacs.app build ships.
-(setenv "MACOSX_DEPLOYMENT_TARGET" "27.0")
+;;;; Identity
+(setq user-full-name "Adam Patterson"
+      user-mail-address "adam@adamrt.com")
 
 ;;;; Packages
-;; A package comes from the highest-priority archive that has it.
 (require 'package)
 (add-to-list 'package-archives
-             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(add-to-list 'package-archives
              '("nongnu-devel" . "https://elpa.nongnu.org/nongnu-devel/") t)
-(setq package-archive-priorities '(("gnu"          . 30)
-                                   ("nongnu"       . 20)
-                                   ("melpa-stable" . 10)))
 (package-initialize)
+
 (unless package-archive-contents
   (package-refresh-contents))
 
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;;;; Identity
-(setq user-full-name "Adam Patterson"
-      user-mail-address "adam@adamrt.com")
-
 ;;;; Basics
 (setq inhibit-startup-screen t
       ring-bell-function #'ignore
       use-short-answers t
       create-lockfiles nil
-      make-backup-files nil              ; git is the backup
+      make-backup-files nil
+      auto-save-default nil
       load-prefer-newer t
       sentence-end-double-space nil
       custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -39,24 +30,28 @@
 (setq-default indent-tabs-mode nil
               fill-column 80)
 
-;; Keep crash-recovery auto-saves (#file#) out of project directories.
-(let ((autosaves (expand-file-name "auto-saves/" user-emacs-directory)))
-  (make-directory autosaves t)
-  (setq auto-save-file-name-transforms `((".*" ,autosaves t))))
-
 ;;;; macOS
-;; Command = Meta, Option = Super, right Option left to the OS for special chars.
-(setq mac-command-modifier      'meta
-      ns-command-modifier       'meta
-      mac-option-modifier       'super
-      ns-option-modifier        'super
-      mac-right-option-modifier 'none
-      ns-right-option-modifier  'none)
-
-;; Files deleted from Dired go to the macOS Trash instead of vanishing.
 (when (eq system-type 'darwin)
-  (setq delete-by-moving-to-trash t
-        trash-directory "~/.Trash"))
+  ;; Emacs.app's bundled GCC derives a nonexistent macOS version (18) from
+  ;; Darwin 27, breaking native compilation.  Give it the real one.
+  ;; Remove once a fixed Emacs.app build ships.
+  (setenv "MACOSX_DEPLOYMENT_TARGET" "27.0")
+
+  (setq mac-command-modifier 'meta
+        ns-command-modifier 'meta
+        mac-option-modifier 'super
+        ns-option-modifier 'super
+        mac-right-option-modifier 'none
+        ns-right-option-modifier 'none
+        delete-by-moving-to-trash t
+        trash-directory "~/.Trash")
+
+
+  ;; Bring Emacs to the front once startup finishes.
+  (add-hook 'window-setup-hook
+          (lambda ()
+            (when (display-graphic-p)
+              (select-frame-set-input-focus (selected-frame))))))
 
 ;;;; UI
 (setq frame-resize-pixelwise t)        ; no gaps when maximized
@@ -71,12 +66,6 @@
   (unless (find-font (font-spec :family "Berkeley Mono"))
     (error "Berkeley Mono not found"))
   (set-face-attribute 'default nil :family "Berkeley Mono" :height 240))
-
-;; Bring Emacs to the front once startup finishes.
-(add-hook 'window-setup-hook
-          (lambda ()
-            (when (display-graphic-p)
-              (select-frame-set-input-focus (selected-frame)))))
 
 (setopt mode-line-collapse-minor-modes t) ; one button instead of every lighter
 (column-number-mode 1)
@@ -142,10 +131,13 @@
 (defun my/c-setup ()
   (setq-local indent-tabs-mode t
               tab-width 8
-              compile-command "make -k ")
-  (when (require 'flymake-cc nil t)
-    (add-hook 'flymake-diagnostic-functions #'flymake-cc nil t)
-    (flymake-mode 1)))
+              compile-command "make -k "
+              flymake-cc-command
+              '("clang" "-std=c99" "-Wall" "-Wextra"
+                "-fsyntax-only" "-x" "c" "-"))
+  (require 'flymake-cc)
+  (add-hook 'flymake-diagnostic-functions #'flymake-cc nil t)
+  (flymake-mode 1))
 (add-hook 'c-mode-hook #'my/c-setup)
 (add-hook 'c-ts-mode-hook #'my/c-setup)
 
@@ -199,16 +191,6 @@
       (quit-window)
     (keyboard-quit)))
 
-;; xref-find-references looks up file patterns by major mode; tree-sitter
-;; modes that replace an older mode (c-ts-mode for c-mode, etc.) aren't in
-;; its table, so look them up under the mode they replaced.
-(defun my/symref-use-base-mode (fn &optional mode)
-  (let* ((mode (or mode major-mode))
-         (base (car (rassq mode major-mode-remap-alist))))
-    (funcall fn (or base mode))))
-(advice-add 'semantic-symref-derive-find-filepatterns
-            :around #'my/symref-use-base-mode)
-
 ;;;; GPG
 ;; Signed git commits (from Magit) ask for the GPG passphrase in the
 ;; minibuffer.  gpg-agent hands the prompt to this Emacs pinentry server,
@@ -219,24 +201,27 @@
   (pinentry-start))
 
 ;;;; Evil
-;; These must be set BEFORE evil loads, or evil-collection won't work.
-(setq evil-want-integration t
-      evil-want-keybinding nil
-      evil-want-C-u-scroll t
-      evil-want-Y-yank-to-eol t
-      evil-undo-system 'undo-redo
-      evil-split-window-below t
-      evil-vsplit-window-right t
-      evil-disable-insert-state-bindings t) ; keep Emacs keys in insert state
-
 (use-package evil
-  :pin nongnu-devel ;; Its not up to date in stable
-  :config (evil-mode 1))
+  :pin nongnu-devel
+  :init
+  (setq evil-want-integration t
+        evil-want-keybinding nil
+        evil-want-C-u-scroll t
+        evil-want-Y-yank-to-eol t
+        evil-undo-system 'undo-redo
+        evil-split-window-below t
+        evil-vsplit-window-right t
+        evil-disable-insert-state-bindings t)
+  :config
+  (evil-mode 1))
 
 (use-package evil-collection
-  :pin nongnu-devel ;; Its not up to date in stable
+  :pin nongnu-devel
   :after evil
-  :config (evil-collection-init))
+  :init
+  (setq evil-collection-key-blacklist '("SPC"))
+  :config
+  (evil-collection-init))
 
 (define-key special-mode-map (kbd "C-g") #'my/quit-dwim)
 (evil-define-key '(normal motion) special-mode-map (kbd "C-g") #'my/quit-dwim)
@@ -382,9 +367,9 @@
  "c C" #'recompile
  "c x" #'kill-compilation
  "c e" #'consult-flymake
- "c n" #'flymake-goto-next-error
+ "c n" #'next-error
+ "c p" #'previous-error
  "c o" #'ff-find-other-file                 ; toggle .c <-> .h
- "c p" #'flymake-goto-prev-error
 
  ;; g: git (Magit)
  "g g" #'magit-status
@@ -459,7 +444,6 @@
        (fg         "#d8dcd9")
        (fg-dim     "#959c98")   ; secondary text
        (fg-soft    "#b0b6b2")   ; types, preprocessor lines
-       (fg-soft    "#b0b6b2")
        (comment    "#8a948f")
        (line-bg    "#2b3032")
        (selection  "#303537")

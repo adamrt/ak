@@ -3,6 +3,8 @@
         email = adam@adamrt.com
         signingkey = 6EA6FC1D         # Personal
         # signingkey = 66DE6BE23985C480 # Openly
+[core]
+        excludesFile = ~/.gitignore
 [diff]
         algorithm = histogram
 [url "ssh://git@github.com:/"]
