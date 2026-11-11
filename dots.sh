@@ -1,26 +1,75 @@
 #!/bin/sh
+# Symlink dotfiles from ~/src/ak/dots into $HOME.
 set -eu
 
-DIR=$(CDPATH= cd "$(dirname "$0")" && pwd)
+D="$HOME/src/ak/dots"
 
-# Link dotfiles, preserving directory structure.
-(
-    cd "$DIR/dots"
-    find . -type f | while IFS= read -r file; do
-        dst="$HOME/${file#./}"
-        mkdir -p "$(dirname "$dst")"
+# Which machine is this?
+#   Linux                    -> linux
+#   Mac named FDK03H02RJ     -> mac-work
+#   any other Mac            -> mac
+case "$(uname -s)" in
+Linux) machine=linux ;;
+Darwin)
+    if [ "$(scutil --get LocalHostName)" = FDK03H02RJ ]; then
+        machine=mac-work
+    else
+        machine=mac
+    fi
+    ;;
+*)
+    echo "unknown OS: $(uname -s)" >&2
+    exit 1
+    ;;
+esac
+echo "machine: $machine"
 
-        if [ -e "$dst" ] || [ -L "$dst" ]; then
-            printf 'Already exists: %s\n' "$dst"
-            continue
-        fi
+# link SRC [DST]: symlink $D/SRC to ~/DST (DST defaults to SRC).
+link() {
+    src="$D/$1"
+    dst="$HOME/${2:-$1}"
+    mkdir -p "$(dirname "$dst")"
+    if [ "$(readlink "$dst" 2>/dev/null)" = "$src" ]; then
+        return
+    fi
+    if [ -e "$dst" ] || [ -L "$dst" ]; then
+        echo "exists, skipping: $dst" >&2
+        return
+    fi
+    ln -s "$src" "$dst"
+    echo "linked: $dst"
+}
 
-        ln -s "$DIR/dots/${file#./}" "$dst"
-    done
-)
+# All machines. Git identity is chosen per repo in .gitconfig.
+link .emacs.el
+link .gitconfig
+link .gitconfig-work
+link .gitignore
+link .gnupg/gpg.conf
+link .gnupg/gpg-agent.conf
 
-# Sensitive directory and file permissions.
-chmod 700 "$HOME/.ssh" "$HOME/.gnupg"
-chmod 600 "$HOME/.ssh/config" \
-          "$HOME/.gnupg/gpg.conf" \
-          "$HOME/.gnupg/gpg-agent.conf"
+case "$machine" in
+linux)
+    link .bashrc
+    link .profile
+    link .config/i3/config
+    link .config/i3status/config
+    link .config/environment.d/10-path.conf
+    link .local/share/applications/emacs-local.desktop
+    ;;
+mac)
+    link .zprofile
+    link .zshrc
+    ;;
+mac-work)
+    link .zprofile
+    link .zshrc
+    ;;
+esac
+
+chmod 700 "$HOME/.gnupg"
+chmod 600 "$HOME/.gnupg/gpg.conf" "$HOME/.gnupg/gpg-agent.conf"
+if [ -e "$HOME/.ssh/config" ]; then
+    chmod 700 "$HOME/.ssh"
+    chmod 600 "$HOME/.ssh/config"
+fi

@@ -1,0 +1,10 @@
+[user]
+	email = adam.patterson@openly.com
+        signingkey = 66DE6BE23985C480
+[filter "lfs"]
+        clean = git-lfs clean -- %f
+        smudge = git-lfs smudge -- %f
+        process = git-lfs filter-process
+        required = true
+[protocol "ssh"]
+        allow = always

@@ -1,7 +1,5 @@
 #!/bin/bash
 
-USER=adam
-
 set -euo pipefail
 
 [[ -d ~/.gnupg ]]          || (echo "Missing .gnupg"     && exit 1)
@@ -49,11 +47,8 @@ killall Finder
 # Install homebrew
 [[ -d /opt/homebrew ]] || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# Add homebrew to path
-if ! grep -q 'eval "$(/opt/homebrew/bin/brew shellenv)"' /Users/$USER/.zprofile; then
-    (echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv zsh)"') >> /Users/$USER/.zprofile
-    eval "$(/opt/homebrew/bin/brew shellenv zsh)"
-fi
+# Add homebrew to path for the rest of this script (dots/.zprofile handles shells)
+eval "$(/opt/homebrew/bin/brew shellenv bash)"
 
 # Install basics
 brew install --quiet fd
@@ -89,5 +84,8 @@ brew install --quiet --cask zoom
 brew install --quiet --cask 1password
 brew install --quiet --cask syncthing
 brew install --quiet --cask obsidian
+
+# Configuration
+sh "$HOME/src/ak/dots.sh"
 
 echo "Don't forget to set CapsLock to Ctrl"

@@ -19,3 +19,5 @@ PS1='\u@\h:\w\$ '
 if [ -n "${EAT_SHELL_INTEGRATION_DIR:-}" ]; then
     . "$EAT_SHELL_INTEGRATION_DIR/bash"
 fi
+
+alias unlock='echo unlock | gpg --clearsign > /dev/null'

@@ -1,8 +1,13 @@
 [user]
         name = Adam Patterson
         email = adam@adamrt.com
-        signingkey = 6EA6FC1D         # Personal
-        # signingkey = 66DE6BE23985C480 # Openly
+        signingkey = 6EA6FC1D
+        useConfigOnly = true
+# Work identity for openly-engineering repos (matches the remote URL as stored).
+[includeIf "hasconfig:remote.*.url:*github.com?openly-engineering/**"]
+        path = ~/.gitconfig-work
+[includeIf "hasconfig:remote.*.url:*github.com?openly-engineering-sandbox/**"]
+        path = ~/.gitconfig-work
 [core]
         excludesFile = ~/.gitignore
 [diff]
