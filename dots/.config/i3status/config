@@ -1,6 +1,9 @@
 general {
     output_format = "i3bar"
-    colors = false
+    colors = true
+    color_good = "#d0d0d0"
+    color_degraded = "#e5b566"
+    color_bad = "#ff5555"
     interval = 5
 }
 
@@ -32,6 +35,9 @@ disk "/" {
 battery all {
     format = "Bat %percentage"
     format_down = ""
+    low_threshold = 20
+    threshold_type = "percentage"
+    color_bad = "#ff5555"
 }
 
 tztime local {
