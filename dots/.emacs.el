@@ -246,18 +246,18 @@
         ;; macOS's setuid top, so use one every system already knows.
         eat-term-name "xterm-256color"))
 
-;; Terminals open in a panel along the bottom of the frame.
-;; Project terminals use the left slot...
+;; Terminals open in a normal split along the bottom of the frame.
 (add-to-list 'display-buffer-alist
              '((major-mode . eat-mode)
-               (display-buffer-reuse-window display-buffer-in-side-window)
-               (side . bottom) (slot . 0) (window-height . 0.3)))
-;; ...and general terminals (*eat*, *eat*<2>) sit to its right.
-;; Added second so it's checked first: Emacs uses the first matching rule.
-(add-to-list 'display-buffer-alist
-             '("\\`\\*eat\\*"
-               (display-buffer-reuse-window display-buffer-in-side-window)
-               (side . bottom) (slot . 1) (window-height . 0.3)))
+               (display-buffer-reuse-window display-buffer-at-bottom)
+               (window-height . 0.35)))
+
+(defun my/terminal-toggle ()
+  "Open the project terminal, or close its window if it's selected."
+  (interactive)
+  (if (derived-mode-p 'eat-mode)
+      (delete-window)
+    (eat-project)))
 
 ;;;; Consult
 ;; Built-in Emacs has no live search. project-find-regexp makes you type the
@@ -378,7 +378,6 @@
  "w r" #'winner-redo
  "w d" #'delete-window
  "w o" #'delete-other-windows
- "w t" #'window-toggle-side-windows   ; hide/show the terminal panel
 
  ;; m: marks / bookmarks
  "m m" #'bookmark-set
@@ -394,8 +393,8 @@
 
  ;; o: open
  "o d" #'dired-jump
- "o t" #'eat-project  ; project terminal (project root)
- "o T" #'eat          ; general terminal; SPC u SPC o T for another
+ "o t" #'my/terminal-toggle ; project terminal; press again to hide
+ "o T" #'eat                ; general terminal; SPC u SPC o T for another
 
  ;; q: quit
  "q q" #'save-buffers-kill-terminal
