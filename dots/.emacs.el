@@ -204,6 +204,7 @@
         evil-vsplit-window-right t
         evil-disable-insert-state-bindings t)
   :config
+  (define-key evil-insert-state-map (kbd "C-w") #'evil-delete-backward-word)
   (evil-mode 1))
 
 (use-package evil-collection
