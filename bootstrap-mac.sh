@@ -6,7 +6,6 @@ set -euo pipefail
 
 [[ -d ~/.gnupg ]]          || (echo "Missing .gnupg"     && exit 1)
 [[ -f ~/.ssh/id_ed25519 ]] || (echo "Missing .ssh"       && exit 1)
-[[ -f ~/.gitconfig ]]      || (echo "Missing .gitconfig" && exit 1)
 
 # Setup directories
 mkdir -p ~/tmp
@@ -81,23 +80,14 @@ brew install --quiet prettier
 brew install --quiet python3
 
 brew install --quiet glfw
-brew install --quiet libvterm # required for vterm
 
 # Install casks
-brew install --quiet --cask emacs
+brew install --quiet --cask emacs-app
 brew install --quiet --cask firefox
 brew install --quiet --cask tableplus
-brew install --quiet --cask little-snitch
 brew install --quiet --cask zoom
 brew install --quiet --cask 1password
 brew install --quiet --cask syncthing
 brew install --quiet --cask obsidian
-
-# Install doom emacs
-if ! [[ -d ~/.config/emacs ]]; then
-    git clone git@github.com:adamrt/doom.d.git ~/.config/doom # my config
-    git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
-    ~/.config/emacs/bin/doom install
-fi
 
 echo "Don't forget to set CapsLock to Ctrl"
