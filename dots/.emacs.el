@@ -1,4 +1,4 @@
-;;; init.el --- built-ins plus Evil, Magit, Consult and Eat. -*- lexical-binding: t; -*-
+;;; emacs.el --- built-ins plus Evil, Magit, Consult and Eat. -*- lexical-binding: t; -*-
 
 ;;;; Identity
 (setq user-full-name "Adam Patterson"
@@ -58,7 +58,7 @@
 
 ;;;; UI
 (setq frame-resize-pixelwise t)        ; no gaps when maximized
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+(setq frame-inhibit-implied-resize t)
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (menu-bar-mode -1)
