@@ -129,22 +129,8 @@
 (add-to-list 'auto-mode-alist '("/go\\.mod\\'" . go-mod-ts-mode))
 
 ;;;; C
-(setq c-ts-mode-indent-style 'linux
-      c-ts-mode-indent-offset 8
-      c-default-style '((c-mode . "linux") (other . "gnu")))
-
-(defun my/c-setup ()
-  (setq-local indent-tabs-mode t
-              tab-width 8
-              compile-command "make -k "
-              flymake-cc-command
-              '("clang" "-std=c99" "-Wall" "-Wextra"
-                "-fsyntax-only" "-x" "c" "-"))
-  (require 'flymake-cc)
-  (add-hook 'flymake-diagnostic-functions #'flymake-cc nil t)
-  (flymake-mode 1))
-(add-hook 'c-mode-hook #'my/c-setup)
-(add-hook 'c-ts-mode-hook #'my/c-setup)
+(setq c-ts-mode-indent-style 'k&r
+      c-ts-indent-offset 4)
 
 ;;;; Go (gofmt ships with the Go toolchain)
 (defun my/gofmt-buffer ()
@@ -371,7 +357,6 @@
  "c c" #'project-compile
  "c C" #'recompile
  "c x" #'kill-compilation
- "c e" #'consult-flymake
  "c n" #'next-error
  "c p" #'previous-error
  "c o" #'ff-find-other-file                 ; toggle .c <-> .h
@@ -417,7 +402,6 @@
  ;; t: toggle
  "t l" #'display-line-numbers-mode
  "t w" #'visual-line-mode
- "t f" #'flymake-mode
  "t h" #'hs-toggle-all
  "t r" #'read-only-mode
 
