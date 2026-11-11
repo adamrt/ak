@@ -30,6 +30,9 @@
 (setq-default indent-tabs-mode nil
               fill-column 80)
 
+;; One binding to rule them all! Steve Yegge
+(global-set-key (kbd "C-w") #'backward-kill-word)
+
 ;;;; macOS
 (when (eq system-type 'darwin)
   ;; Emacs.app's bundled GCC derives a nonexistent macOS version (18) from
@@ -204,7 +207,6 @@
         evil-vsplit-window-right t
         evil-disable-insert-state-bindings t)
   :config
-  (define-key evil-insert-state-map (kbd "C-w") #'evil-delete-backward-word)
   (evil-mode 1))
 
 (use-package evil-collection
