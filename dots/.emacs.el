@@ -261,6 +261,17 @@
       (delete-window)
     (eat-project)))
 
+(defun my/eat-close-window (process)
+  "Close the window that showed PROCESS's buffer once the shell exits."
+  (let ((win (get-buffer-window (process-buffer process))))
+    (when win
+      (run-with-timer 0.1 nil
+                      (lambda ()
+                        (when (and (window-live-p win)
+                                   (not (one-window-p t)))
+                          (delete-window win)))))))
+(add-hook 'eat-exit-hook #'my/eat-close-window)
+
 ;;;; Consult
 ;; Built-in Emacs has no live search. project-find-regexp makes you type the
 ;; whole query before showing results, and the built-in buffer/xref/imenu
