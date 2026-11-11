@@ -326,6 +326,7 @@
  "b b" #'consult-buffer
  "b i" #'ibuffer
  "b n" #'next-buffer
+ "b l" #'evil-switch-to-windows-last-buffer
  "b p" #'previous-buffer
  "b r" #'revert-buffer
  "b d" #'kill-current-buffer
