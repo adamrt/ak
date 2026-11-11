@@ -362,23 +362,9 @@
  "c p" #'previous-error
  "c o" #'ff-find-other-file                 ; toggle .c <-> .h
 
- ;; g: git (Magit)
+ ;; g: git
  "g g" #'magit-status
- "g /" #'magit-dispatch
- "g ." #'magit-file-dispatch
- "g d" #'magit-diff-dwim
- "g D" #'magit-diff-buffer-file
- "g l" #'magit-log-current
- "g L" #'magit-log-buffer-file
  "g b" #'magit-blame-addition
- "g B" #'magit-branch-checkout
- "g c" #'magit-commit
- "g f" #'magit-fetch
- "g F" #'magit-pull
- "g p" #'magit-push-current
- "g s" #'magit-stage-buffer-file
- "g u" #'magit-unstage-buffer-file
- "g S" #'magit-stash
 
  ;; w: window
  "w v" #'evil-window-vsplit
