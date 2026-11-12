@@ -68,7 +68,7 @@
   ;; Required font: fail loudly if missing (GUI only).
   (unless (find-font (font-spec :family "Berkeley Mono"))
     (error "Berkeley Mono not found"))
-  (set-face-attribute 'default nil :family "Berkeley Mono" :height 240))
+  (set-face-attribute 'default nil :family "Berkeley Mono" :height 180))
 
 (setopt mode-line-collapse-minor-modes t) ; one button instead of every lighter
 (column-number-mode 1)
@@ -338,6 +338,7 @@
  "f S" #'write-file
  "f R" #'rename-visited-file
  "f c" #'my/find-init-file
+ "f y" (lambda () (interactive) (kill-new (buffer-file-name)))
 
  ;; p: project
  "p p" #'project-switch-project

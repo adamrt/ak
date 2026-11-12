@@ -55,6 +55,7 @@ linux)
     link .config/i3/config
     link .config/i3status/config
     link .config/environment.d/10-path.conf
+    link .config/gtk-3.0/settings.ini
     link .local/share/applications/emacs-local.desktop
     ;;
 mac)

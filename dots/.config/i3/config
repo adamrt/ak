@@ -11,7 +11,12 @@ default_border pixel 5
 # Applications
 bindsym $mod+Return exec konsole
 bindsym $mod+b exec firefox
-bindsym $mod+p exec dmenu_run
+bindsym $mod+p exec --no-startup-id dmenu_run \
+    -fn "Berkeley Mono:size=20" \
+    -nb "#285577" \
+    -nf "#ffffff" \
+    -sb "#4c7899" \
+    -sf "#ffffff"
 
 # Window switching
 bindsym Mod1+Tab focus next
