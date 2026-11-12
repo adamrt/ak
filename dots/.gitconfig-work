@@ -1,5 +1,5 @@
 [user]
-	email = adam.patterson@openly.com
+	email = adam@adamrt.com
         signingkey = 66DE6BE23985C480
 [filter "lfs"]
         clean = git-lfs clean -- %f
