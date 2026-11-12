@@ -177,14 +177,6 @@
   (interactive)
   (find-file user-init-file))
 
-(defun my/quit-dwim ()
-  "Close read-only popup buffers (xref, help, compilation...), else quit."
-  (interactive)
-  (if (and (derived-mode-p 'special-mode)
-           (not (minibufferp)))
-      (quit-window)
-    (keyboard-quit)))
-
 ;;;; GPG
 ;; Signed git commits (from Magit) ask for the GPG passphrase in the
 ;; minibuffer.  gpg-agent hands the prompt to this Emacs pinentry server,
@@ -216,9 +208,6 @@
   (setq evil-collection-key-blacklist '("SPC"))
   :config
   (evil-collection-init))
-
-(define-key special-mode-map (kbd "C-g") #'my/quit-dwim)
-(evil-define-key '(normal motion) special-mode-map (kbd "C-g") #'my/quit-dwim)
 
 ;;;; Leader key (core; bindings are at the end)
 (defvar my/leader-map (make-sparse-keymap) "Doom-style leader keymap.")
