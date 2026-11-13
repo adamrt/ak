@@ -107,7 +107,7 @@
 (when (executable-find "rg")
   (setq xref-search-program 'ripgrep))
 (setq xref-prompt-for-identifier nil
-      etags-regen-file-extensions '("c" "h" "go")
+      etags-regen-file-extensions '("c" "h" "go" "py")
       etags-regen-program-options '("--declarations")
       project-switch-commands #'magit-project-status)
 (etags-regen-mode 1)
