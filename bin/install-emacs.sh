@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-# Build GNU Emacs 31.1 on Debian 13 (Trixie).
+# Build and install GNU Emacs 31.1 on Debian 13 (Trixie).
 version=31.1
 sha256=1da5790d9580c81932b5bf700633114468da7b3412d69faa767daebf974f4586
 prefix="$HOME/opt/emacs-$version"
