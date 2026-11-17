@@ -4,8 +4,8 @@ set -eu
 DIR=$(CDPATH= cd "$(dirname "$0")" && pwd)
 
 # Directories
-mkdir -p "$HOME/src" "$HOME/tmp" "$HOME/.config"
-
+rm -rf "$HOME/Pictures" "$HOME/Movies" "$HOME/Desktop" "$HOME/Documents" "$HOME/Downloads" "$HOME/Public" "$HOME/Templates" "$HOME/Videos"
+mkdir -p "$HOME/src" "$HOME/opt" "$HOME/tmp" "$HOME/.config"
 
 # Packages
 sudo apt-get update
@@ -15,23 +15,12 @@ sudo apt-get install -y \
     clang \
     clangd \
     clang-format \
-    cmake \
-    curl \
-    dmenu \
-    docker.io \
-    docker-compose \
+    fonts-jetbrains-mono \
     git \
-    i3-wm \
-    i3lock \
-    i3status \
-    libtool \
-    libtool-bin \
     ripgrep \
-    syncthing \
-    tmux \
-    x11-xserver-utils \
-    xss-lock
-    # emacs \ # built native
+    syncthing
 
 # Configuration
 sh "$DIR/dots.sh"
+sh "$DIR/bin/install-emacs.sh"
+sh "$DIR/bin/install-go.sh"
