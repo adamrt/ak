@@ -65,10 +65,13 @@
 (when (display-graphic-p)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
-  ;; Required font: fail loudly if missing (GUI only).
-  (unless (find-font (font-spec :family "Berkeley Mono"))
-    (error "Berkeley Mono not found"))
-  (set-face-attribute 'default nil :family "Berkeley Mono" :height 180))
+  ;; Prefer Berkeley Mono, fall back to JetBrains Mono.
+  (let ((family
+         (cond
+          ((find-font (font-spec :family "Berkeley Mono")) "Berkeley Mono")
+          ((find-font (font-spec :family "JetBrains Mono")) "JetBrains Mono")
+          (t (error "Install Berkeley Mono or JetBrains Mono")))))
+    (set-face-attribute 'default nil :family family :height 180)))
 
 (setopt mode-line-collapse-minor-modes t) ; one button instead of every lighter
 (column-number-mode 1)
@@ -80,18 +83,18 @@
       recentf-max-saved-items 200)
 
 (global-auto-revert-mode 1)
-(electric-pair-mode 1)
+;; (electric-pair-mode 1)
 (recentf-mode 1)
 (savehist-mode 1)
 (save-place-mode 1)
 (winner-mode 1)
 (repeat-mode 1)
+(global-hl-line-mode 1)
 
 ;; Shared setup for every programming mode.
 (defun my/prog-setup ()
   (add-hook 'before-save-hook #'delete-trailing-whitespace nil t)
-  (hs-minor-mode 1)                    ; folding; Evil's za/zc/zo use it
-  (completion-preview-mode 1))         ; inline completion hints
+  (hs-minor-mode 1))                    ; folding; Evil's za/zc/zo use it
 (add-hook 'prog-mode-hook #'my/prog-setup)
 
 ;;;; Completion
@@ -100,10 +103,11 @@
       tab-always-indent 'complete)
 (fido-vertical-mode 1)
 ;; TAB in the minibuffer accepts the top candidate (directories get a trailing /).
-(define-key icomplete-minibuffer-map (kbd "TAB") #'minibuffer-force-complete)
+(define-key icomplete-minibuffer-map (kbd "TAB") #'icomplete-force-complete)
 (global-set-key (kbd "M-/") #'hippie-expand)
 
 ;;;; Navigation: project, xref, tags
+(require 'project)
 (when (executable-find "rg")
   (setq xref-search-program 'ripgrep))
 (setq xref-prompt-for-identifier nil
