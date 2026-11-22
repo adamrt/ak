@@ -47,6 +47,7 @@ link .gitconfig-work
 link .gitignore
 link .gnupg/gpg.conf
 link .gnupg/gpg-agent.conf
+link .ssh/config
 
 case "$machine" in
 linux)
